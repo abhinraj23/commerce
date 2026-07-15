@@ -1,0 +1,45 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+<h1>My Listings : </h1>
+{% if listings %}
+{% for list,value in highest.items %}
+	 <div class="items">
+    	<div class="left">
+    		<img src="{{list.image}}" height="150"></img>
+    	</div>
+    	<div class="right">
+    		<h4>{{list.item_name}}</h4>
+    		{% if value %}
+    		<i>Current highest bid is {{value.bid_price}}</i>
+    		{% else %}
+                <i>No bids yet</i>
+            {% endif %}
+    		</hr>
+    		<p>description : {{list.description}}</p>
+    		<div class="press">
+    		<a href="{% url 'auctions:details'  pk=list.pk %}" class="btn btn-info">View Details</a>
+    		</div>
+    	</div>
+    		</div>
+    		
+    		<div class="card d-md-none mb-3" style="width: 16rem; ">
+  <img class="card-img-top custom" src="{{list.image}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{list.item_name}}</h5>
+    {% if value %}
+    <p class="card-text">Current highest bid is {{value.bid_price}}</p>
+    {% else %}
+    <p class="card-text">No bids yet</p>
+    {% endif %}
+    <p class="card-text">{{list.description}}</p>
+    <a href="{% url 'auctions:details' pk=list.pk %}" class="btn btn-info">View Details</a>
+  </div>
+</div> 
+    		
+    		
+    	
+{% endfor %}
+{% else %}
+<h1>No auctions so far </h1>
+{% endif %}
+{% endblock %}

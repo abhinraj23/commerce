@@ -1,0 +1,19 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+{% if message %}
+<div class="alert alert-warning" role="alert">
+{{ message }}
+</div>
+{% endif %}
+<h1>Update bid <h1>
+<h4>Item : {{obj.item_name}}</h4>
+<h4>Your bid : {{c_price}} </h4>
+<h4>Current highest bid : {{high.bid_price}}<h4>
+<form action="{% url 'auctions:edit_bid' id=c_bid.pk %}" method='post'>
+{% csrf_token %}
+<label>New bid : </label>
+<input type="number" class="form-control" name="new_price"> 
+<input type="submit" class="btn btn-primary" value="place bid">
+</form>
+<a href="{% url 'auctions:details' pk=obj.pk %}">Go back</a>
+{% endblock %}

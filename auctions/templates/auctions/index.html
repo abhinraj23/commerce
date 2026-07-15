@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if message %}
+
+<div class="alert alert-success" role="alert">
+{{ message }}
+</div>
+{% endif %}
+    <h2>Active Listings</h2>
+    <div class="row ">
+    {% for list in lists %}
+    {% if list.status == True %}
+     {% if cat %}
+    {% if cat == list.category_name %}
+    
+    <div class="card mx-2 mb-3" style="width: 16rem;">
+  <img class="card-img-top custom" src="{{list.image}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{list.item_name}}</h5>
+    <p class="card-text">starting bid : {{list.price}}</br>{{list.description}}</p>
+    <a href="{% url 'auctions:details' pk=list.pk %}" class="btn btn-info">View Details</a>
+  </div>
+</div>    
+    		{% endif %}
+    	{% else %}
+    	 <div class="card mx-2 mb-3" style="width: 16rem; ">
+  <img class="card-img-top custom" src="{{list.image}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{list.item_name}}</h5>
+    <p class="card-text">starting bid : {{list.price}}</br>{{list.description}}</p>
+    <a href="{% url 'auctions:details' pk=list.pk %}" class="btn btn-info">View Details</a>
+  </div>
+</div> 
+    	
+    		{% endif %}
+    		{% endif %}
+    	{% endfor %}
+    	</div>
+
+{% endblock %}

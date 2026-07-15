@@ -1,0 +1,36 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+<h1>My Bids : </h1>
+{% if bids %}
+{% for bid in bids %}
+	 <div class="items">
+    	<div class="left">
+    		<img src="{{bid.item.image}}" height="150"></img>
+    	</div>
+    	<div class="right">
+    		<h4>{{bid.item.item_name}}</h4>
+    		<i>Your current bid : {{bid.bid_price}}</i>
+    		</hr>
+    		<p>description:{{bid.item.description}}</p>
+    		<div class="press">
+    		<a href="{% url 'auctions:details'  pk=bid.item.pk %}" class="btn btn-info">View Details</a>
+    		</div>
+    	</div>
+    		</div>
+    		
+    			<div class="card d-md-none mb-3" style="width: 16rem; ">
+  <img class="card-img-top " src="{{bid.item.image}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{bid.item.item_name}}</h5>
+    <p class="card-text">Your current bid is {{bid.bid_price}}</br>{{bid.item.description}}</p>
+    <p class="card-text">{{list.description}}</p>
+    <a href="{% url 'auctions:details' pk=bid.item.pk %}" class="btn btn-info">View Details</a>
+  </div>
+</div> 
+
+    	{% endfor %}
+  {% else %}
+  <h1>No bids so far</h1>
+  {% endif %}
+
+{% endblock %}

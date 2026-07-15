@@ -1,0 +1,111 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+{% if message %}
+{% if type == "success" %}
+<div class="alert alert-success" role="alert">
+{{ message }}
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+{{ message }}
+</div>
+{% endif %}
+{% endif %}
+{% if object.status %}
+<div class="details">
+<h1>Item :  {{object.item_name}}</h1>
+{% if user.is_authenticated %}
+	{% if button %}
+	<button onclick="window.location.href='{% url 'auctions:add_watchlist' id=object.pk sts=1 %}' " class="btn btn-secondary btn-sm" id="bt">Add to watchlist</button>
+	{% else %}
+	<button onclick="window.location.href='{% url 'auctions:add_watchlist' id=object.pk sts=0 %}' " class="btn btn-secondary btn-sm" id="bt">Remove from watchlist</button>
+	{% endif %}
+{% endif %}
+<img src="{{ object.image }}" id="detailed_image" ></img>
+<h2>Base Price: <b>${{object.price}}</b></h2>
+{% if user.is_authenticated %}
+  {% if user == object.owner_name %}
+   {% if highest.bid_price %}
+   <i>Current highest bid : {{highest.bid_price}}</i>
+   <i>bidder : {{highest.bidder }}</i>
+   {% else %}
+    <i>Current highest bid : No current bids</i>
+    {% endif %}
+   <button onclick="window.location.href='{% url 'auctions:edit_listing' id=object.pk %}' " class="btn btn-secondary btn-sm">edit your item</button>
+   {% else %}
+	{% if hide %}
+		<h2>You have placed your bid with $ {{c_bid.bid_price}}</h2>
+		{% if repeat == 0 %}
+			<h3>You have the current highest bid for this item</h3>
+		{% else %}
+			<h3>You dont have the current highest bid.Right now highest bid is ${{highest.bid_price }}.place a bid for grab the item:</h3>
+		{% endif %}
+		<button onclick="window.location.href='{% url 'auctions:edit_bid' id=c_bid.pk %}' " class="btn btn-dark">place a higher bid</button>
+		<button onclick="window.location.href='{% url 'auctions:delete_bid' id=c_bid.pk %}' " class="btn btn-danger ">delete your bid </button>
+	{% else %}
+<form action="{% url 'auctions:bids' pk=object.pk%}" method="post" autocomplete="off">
+{% csrf_token %}
+<label>Place your bid : </label>
+<input type ="number" class="form-control" name="price">
+{% if highest.bid_price is not None %}
+<p><small>The current highest bid is {{highest.bid_price}}</small></p>
+{% else %}
+<p><small>There are no bids for this item</small></p>
+{% endif %}
+<input type="submit" class="btn btn-primary">
+</form>
+{% endif %}
+ {% endif %}
+	{% endif %}
+	<h2>More Info : </h2>
+	listed by : {{object.owner_name}}</br>
+	contact : {{object.owner_name.email}}</br>
+	category : {{object.category_name}}</br>
+	expire on : {{object.last_date|date:"F j,Y" }}	
+	
+</div>
+
+{% if user.is_authenticated %}
+</br>
+<h3>Comments </h3>
+</br>
+{% if comments %}
+<div class="card border-light mb-3" style="max-width: 100rem;">
+  <div class="card-header">Comments</div>
+  {% for comment in comments %}
+  <div class="card-body">
+    <h5 class="card-title">{{ comment.username}}</h5>
+    <p class="card-text">{{comment.topic}}</br></br><small><i>posted on {{comment.c_date|date:"F j,Y"}}</i></small></p>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<h5>No comments </h5>
+{% endif %}
+<div class="form-group">
+<form action="{% url 'auctions:add_comment' id=object.pk %}" method="post" >
+{% csrf_token %}
+<label for="exampleFormControlTextarea1">Add a comment : </label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="comment"></textarea>
+    </br>
+    <input type="submit" class="btn btn-warning" value="post">
+  </div>
+  {% endif %}
+
+
+{% else %}
+<h1>The item is no longer active <h1>
+{% if user == object.owner_name %}
+ <p> Your Email address is provided to the winner of auction.</p>
+ <i>You can contact him through email adrress : {{object.winner.email}}</i>
+ {% endif %}
+ {% if user == object.winner %}
+ <div class="alert alert-success" role="alert">
+ congratulations ! You won the auction with {{highest.bid_price}}.
+</div>
+<i>You can contact the owner usinh email address : {{object.owner_name.email}}</i>
+<b>Best wishes </b>
+{% endif %}
+{% endif %}
+
+{% endblock %}

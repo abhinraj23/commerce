@@ -1,0 +1,40 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<h2>Edit Your Listing </h2>
+<form action="{% url 'auctions:edit_listing' id=obj.pk %}" method="post" autocomplete="off">
+{% csrf_token %}
+  <div class="form-group">
+      {{ form.item_name.label_tag }}
+      {{ form.item_name }}
+    </div>
+    <div class="form-group">
+      {{ form.description.label_tag }}
+      {{ form.description }}
+    </div>
+    <div class="form-group">
+      {{ form.price.label_tag }}
+      {{ form.price }}
+    </div>
+    <div class="form-group">
+      {{ form.category_name.label_tag }}
+      {{ form.category_name }}
+    </div>
+     <div class="form-group">
+      {{ form.image.label_tag }}
+      {{ form.image}}
+    </div>
+    <div>
+    {{form.last_date.label_tag}}
+    {{form.last_date}}
+    </div>
+ <input class="btn btn-primary" type="submit" value="save">
+ </form>
+ <button onclick="window.location.href='{% url 'auctions:delete_listing' id=obj.pk %}'  " class="btn btn-danger btn-sm">delete item</button>
+ 	</hr>
+ {% if highest  %}
+ <button onclick="window.location.href='{% url 'auctions:close_auction' id=obj.pk %}'  " class="btn btn-success btn-sm">close auction</button> 
+ {% endif %}
+<div>
+<a href="{% url 'auctions:details' pk=obj.pk %}" >Back to listing</a>
+</div>
+{% endblock %}
